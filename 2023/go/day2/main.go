@@ -35,13 +35,6 @@ func ReadFileIntoArray(path string) []string {
 	return fileLines
 }
 
-func Sum(s []int) (result int) {
-	for _, i := range s {
-		result = result + i
-	}
-	return result
-}
-
 func main() {
 	inputLines := ReadFileIntoArray("input")
 
