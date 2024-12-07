@@ -20,9 +20,6 @@ fn main() -> io::Result<()> {
     Ok(())
 }
 
-// TODO: Need to check if monotonic but with allowances for:
-// At least one and no more than 3
-
 fn part1(filename: &str) -> Result<i32, Error> {
     let file = File::open(filename)?;
     let reader = BufReader::new(file);
@@ -94,33 +91,22 @@ fn part2(filename: &str) -> Result<i32, Error> {
     Ok(safe_levels.len() as i32)
 }
 
-
 fn is_safe2(level: &Vec<i32>) -> bool {
-    let mut errors = 0;
     if level.len() <= 2 {
         return true;
     }
 
-    let mut direction = level[1] - level[0];
-    if direction.abs() < 1 || direction.abs() > 3 {
-        errors += 1;
+    if is_safe(level) {
+        return true;
     }
 
-    for i in 2..level.len() {
-        let diff = level[i] - level[i-1];
-        if diff.abs() < 1 || diff.abs() > 3 {
-            errors += 1;
-            if errors > 1 {
-                return false;
-            }
+    for i in 0..level.len() {
+        let mut modified_level = level.clone();
+        modified_level.remove(i);
+        if is_safe(&modified_level) {
+            return true;
         }
-        if (direction > 0 && diff < 0) || (direction < 0 && diff > 0) {
-            errors += 1;
-            if errors > 1 {
-                return false;
-            }
-        }
-        direction = diff;
     }
-    true
+
+    false
 }
